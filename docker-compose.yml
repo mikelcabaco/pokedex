@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+  postgredb:
+    image: postgres:14.1-alpine
+    restart: always
+    env_file: ./.env
+    environment:
+      - POSTGRES_USER=$DB_USER
+      - POSTGRES_PASSWORD=$DB_PASSWORD
+    ports:
+      - '$DB_LOCAL_PORT:$DB_DOCKER_PORT'
+    volumes: 
+      - postgredb:/var/lib/postgresql/data
+
+  pokedex:
+    depends_on:
+      - postgredb
+    build: ./pokedex-app
+    restart: always
+    ports:
+      - $POKEDEX_LOCAL_PORT:$POKEDEX_DOCKER_PORT
+    env_file: ./.env
+    environment:
+      SPRING_APPLICATION_JSON: '{
+          "spring.datasource.url"  : "jdbc:postgresql://postgredb:$DB_DOCKER_PORT/$DB_DATABASE"
+        }'
+    volumes:
+      - .m2:/root/.m2
+    stdin_open: true
+    tty: true
+
+volumes:
+  postgredb:
+    driver: local

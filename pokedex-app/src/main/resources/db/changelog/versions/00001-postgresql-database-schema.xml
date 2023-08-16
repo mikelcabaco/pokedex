@@ -1,0 +1,176 @@
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+
+	<changeSet author="heytrade" id="1" >
+		
+		<createSequence sequenceName="sq_types" incrementBy="1" startValue="1" minValue="1" maxValue="99999" />
+		<createTable tableName="types">
+			<column name="TYPE_ID" type="numeric(5,0)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="NAME" type="varchar(50)">
+				<constraints nullable="false" />
+			</column>
+			
+		</createTable>
+		<addDefaultValue tableName="types" columnName="TYPE_ID" defaultValueSequenceNext="sq_types" />
+		<sql>
+			CREATE UNIQUE INDEX IF NOT EXISTS types_NAME_uk on types (lower(NAME));
+			COMMENT ON TABLE types IS 'Pokemon types table';
+		</sql>
+		
+		
+		
+		<createSequence sequenceName="sq_audit_types" incrementBy="1" startValue="1" minValue="1" maxValue="99999999999" />
+		<createTable tableName="types$AUD">
+			<column name="AUDIT_ID" type="numeric(10,0)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="AUDIT_ACTION" type="varchar(10)">
+				<constraints nullable="false" />
+			</column>
+			<column name="AUDIT_STEP" type="varchar(10)">
+				<constraints nullable="false" />
+			</column>
+			<column name="AUDIT_USER" type="varchar(10)">
+				<constraints nullable="false" />
+			</column>
+			<column name="AUDIT_DATE" type="timestamp" defaultValueDate="now()">
+				<constraints nullable="false" />
+			</column>
+			<column name="TYPE_ID" type="numeric(5,0)">
+			</column>
+			<column name="NAME" type="varchar(50)">
+			</column>
+		</createTable>
+		<addDefaultValue tableName="types$AUD" columnName="AUDIT_ID" defaultValueSequenceNext="sq_audit_types" />
+		
+		
+		<createSequence sequenceName="sq_pokemons" incrementBy="1" startValue="1" minValue="1" maxValue="99999" />
+		<createTable tableName="pokemons">
+			<column name="POKEMON_ID" type="numeric(5,0)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="NAME" type="varchar(50)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="FAVOURITE" type="boolean" defaultValue="false">
+				<constraints nullable="false"/>
+			</column>
+			<column name="IMAGE" type="bytea">
+				<constraints nullable="false"/>
+			</column>
+			<column name="SOUND" type="bytea">
+				<constraints nullable="false"/>
+			</column>
+			<column name="WEIGHT" type="varchar(50)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="HEIGHT" type="varchar(50)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="COMBAT_POWER" type="numeric(4,0)">
+				<constraints nullable="false" />
+			</column>
+			<column name="HEALTH_POINTS" type="numeric(4,0)">
+				<constraints nullable="false" />
+			</column>
+			<column name="EVOLUTION_FROM" type="numeric(5,0)">
+			</column>
+		</createTable>
+		<addDefaultValue tableName="pokemons" columnName="POKEMON_ID" defaultValueSequenceNext="sq_pokemons" />
+		<sql>
+			CREATE UNIQUE INDEX IF NOT EXISTS pokemons_NAME_uk on pokemons (lower(NAME));
+			COMMENT ON TABLE pokemons IS 'Pokemons table';
+		</sql>
+		
+		
+		<createSequence sequenceName="sq_audit_pokemons" incrementBy="1" startValue="1" minValue="1" maxValue="99999999999" />
+		<createTable tableName="pokemons$AUD">
+			<column name="AUDIT_ID" type="numeric(10,0)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="AUDIT_ACTION" type="varchar(10)">
+				<constraints nullable="false" />
+			</column>
+			<column name="AUDIT_STEP" type="varchar(10)">
+				<constraints nullable="false" />
+			</column>
+			<column name="AUDIT_USER" type="varchar(10)">
+				<constraints nullable="false" />
+			</column>
+			<column name="AUDIT_DATE" type="timestamp" defaultValueDate="now()">
+				<constraints nullable="false" />
+			</column>
+			<column name="POKEMON_ID" type="numeric(5,0)">
+			</column>
+			<column name="NAME" type="varchar(50)">
+			</column>
+			<column name="FAVOURITE" type="boolean">
+			</column>
+			<column name="IMAGE" type="bytea">
+			</column>
+			<column name="SOUND" type="bytea">
+			</column>
+			<column name="WEIGHT" type="varchar(50)">
+			</column>
+			<column name="HEIGHT" type="varchar(50)">
+			</column>
+			<column name="COMBAT_POWER" type="numeric(4,0)">
+			</column>
+			<column name="HEALTH_POINTS" type="numeric(4,0)">
+			</column>
+			<column name="EVOLUTION_FROM" type="numeric(5,0)">
+			</column>
+		</createTable>
+		<addDefaultValue tableName="pokemons$AUD" columnName="AUDIT_ID" defaultValueSequenceNext="sq_audit_pokemons" />
+		
+		
+		<createSequence sequenceName="sq_pokemon_types" incrementBy="1" startValue="1" minValue="1" maxValue="99999" />
+		<createTable tableName="pokemon_types">
+			<column name="POKEMON_TYPE_ID" type="numeric(5,0)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="POKEMON_ID" type="numeric(5,0)">
+				<constraints nullable="false" foreignKeyName="pokemon_types_POKEMON_ID_fkey" references="pokemons(POKEMON_ID)"/>
+			</column>
+			<column name="TYPE_ID" type="numeric(5,0)">
+				<constraints nullable="false" foreignKeyName="pokemon_types_TYPE_ID_fkey" references="types(TYPE_ID)"/>
+			</column>
+		</createTable>
+		<addDefaultValue tableName="pokemon_types" columnName="POKEMON_TYPE_ID" defaultValueSequenceNext="sq_pokemon_types" />
+		<sql>
+			COMMENT ON TABLE pokemon_types IS 'Pokemons and types table';
+		</sql>
+		
+		
+		<createSequence sequenceName="sq_audit_pokemon_types" incrementBy="1" startValue="1" minValue="1" maxValue="99999999999" />
+		<createTable tableName="pokemon_types$AUD">
+			<column name="AUDIT_ID" type="numeric(10,0)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="AUDIT_ACTION" type="varchar(10)">
+				<constraints nullable="false" />
+			</column>
+			<column name="AUDIT_STEP" type="varchar(10)">
+				<constraints nullable="false" />
+			</column>
+			<column name="AUDIT_USER" type="varchar(10)">
+				<constraints nullable="false" />
+			</column>
+			<column name="AUDIT_DATE" type="timestamp" defaultValueDate="now()">
+				<constraints nullable="false" />
+			</column>
+			<column name="POKEMON_TYPE_ID" type="numeric(5,0)">
+			</column>
+			<column name="POKEMON_ID" type="numeric(5,0)">
+			</column>
+			<column name="TYPE_ID" type="numeric(5,0)">
+			</column>
+		</createTable>
+		<addDefaultValue tableName="pokemon_types$AUD" columnName="AUDIT_ID" defaultValueSequenceNext="sq_audit_pokemon_types" />
+	</changeSet>
+</databaseChangeLog>

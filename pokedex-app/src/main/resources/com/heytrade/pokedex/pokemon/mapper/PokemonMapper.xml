@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.1//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper	namespace="com.heytrade.pokedex.pokemon.mapper.PokemonMapper">
+
+	<resultMap id="pokemonTypeMap" type="com.heytrade.pokedex.pokemon.model.PokemonType">
+		<id property="id" column="TYPE_ID"/>
+		<result property="name" column="NAME"/>
+	</resultMap>
+	
+	<resultMap id="basePokemonMap" type="com.heytrade.pokedex.pokemon.model.Pokemon">
+		<id property="id" column="POKEMON_ID"/>
+		<result property="name" column="NAME"/>
+		<result property="favourite" column="FAVOURITE"/>
+		<result property="image" column="IMAGE"/>
+		<result property="sound" column="SOUND"/>
+		<result property="weight" column="WEIGHT"/>
+		<result property="height" column="HEIGHT"/>
+		<result property="combatPower" column="COMBAT_POWER"/>
+		<result property="healthPoints" column="HEALTH_POINTS"/>
+		<result property="evolutionFrom" column="EVOLUTION_FROM"/>
+		<collection property="types" javaType="ArrayList" column="POKEMON_ID" ofType="com.heytrade.pokedex.pokemon.model.PokemonType" select="getTypesByPokemonId" />
+	</resultMap>
+	
+	<resultMap id="pokemonMap" extends="basePokemonMap" type="com.heytrade.pokedex.pokemon.model.Pokemon">
+		<collection property="evolutions" javaType="ArrayList" column="POKEMON_ID" ofType="com.heytrade.pokedex.pokemon.model.Pokemon" select="getEvolutionsByPokemonId" />
+	</resultMap>
+	
+	
+	<resultMap id="pokemonResultMap" type="com.heytrade.pokedex.pokemon.model.PokemonPage" extends="BASE.baseSearchResultMap">
+		<collection property="records" resultMap="basePokemonMap" />
+	</resultMap>
+	
+	<select id="find" parameterType="com.heytrade.pokedex.pokemon.model.Pokemon" resultMap="pokemonMap">
+		SELECT p.*
+		FROM pokemons p
+		WHERE p.POKEMON_ID = #{id}
+	</select>
+	
+	
+	<select id="search" parameterType="com.heytrade.pokedex.pokemon.model.PokemonPage" resultMap="pokemonResultMap">
+		SELECT FILTERS.* FROM ( WITH SQL_QUERY AS (
+			<include refid="searchSQL" />
+		) SELECT SQL_QUERY.*, COUNT (*) OVER () as totalRecords FROM SQL_QUERY) FILTERS
+	</select>
+	
+	
+	<sql id="searchSQL">
+		SELECT DISTINCT p.*
+		FROM pokemons p
+		JOIN pokemon_types pt ON pt.POKEMON_ID = p.POKEMON_ID
+		<where>
+			<if test="null != filters">
+				<if test="null != filters.name and !filters.name.isEmpty()">
+					AND <include refid="BASE.translate1" />p.NAME <include refid="BASE.translate2_Aproximado" /> #{filters.name} <include refid="BASE.translate3_Aproximado" />
+				</if>
+			</if>
+			<if test="null != filters.types and filters.types.size > 0">
+				AND pt.TYPE_ID IN
+				<foreach index="index" collection="filters.types" open="(" separator="," close=")">
+					#{filters.types[${index}].id}
+				</foreach>
+			</if>
+			<if test="null != filters">
+				<if test="null != filters.favourite">
+					AND p.FAVOURITE = #{filters.favourite}
+				</if>
+			</if>
+		</where>
+	</sql>
+	
+	
+	<select id="getTypes" resultMap="pokemonTypeMap">
+		SELECT t.TYPE_ID, t.NAME
+		FROM types t
+	</select>
+	
+	<select id="getTypesByPokemonId" resultMap="pokemonTypeMap">
+		SELECT t.TYPE_ID, t.NAME
+		FROM pokemon_types pt
+		JOIN types t ON t.TYPE_ID = pt.TYPE_ID
+		WHERE pt.POKEMON_ID = #{POKEMON_ID}
+	</select>
+	
+	<select id="getEvolutionsByPokemonId" resultMap="basePokemonMap">
+		WITH RECURSIVE evolutions_from AS (
+			SELECT p.* 
+			FROM pokemons p
+			WHERE p.pokemon_id = #{POKEMON_ID}
+			UNION ALL
+			SELECT p2.* 
+			FROM pokemons p2 
+			JOIN evolutions_from e ON e.evolution_from = p2.pokemon_id
+		),
+		evolutions_to AS (
+			SELECT p.* 
+			FROM pokemons p
+			WHERE p.pokemon_id = #{POKEMON_ID}
+			UNION ALL
+			SELECT p2.* 
+			FROM pokemons p2 
+			JOIN evolutions_to e ON e.pokemon_id = p2.evolution_from
+		)
+		SELECT * FROM (
+			SELECT * FROM evolutions_from
+			UNION
+			SELECT * FROM evolutions_to
+		) ev
+		WHERE ev.POKEMON_ID != #{POKEMON_ID}
+		ORDER BY evolution_from ASC NULLS FIRST
+	</select>
+	
+	
+	<update id="setOrUnsetFavourite" parameterType="com.heytrade.pokedex.pokemon.model.Pokemon">
+		UPDATE
+			pokemons
+		SET
+			FAVOURITE = #{favourite}
+		WHERE
+			POKEMON_ID = #{id}
+	</update>
+</mapper>

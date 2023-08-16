@@ -1,0 +1,204 @@
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+	<changeSet author="heytrade" id="1">
+		<insert tableName="types">
+			<column name="NAME" value="Grass"></column>
+		</insert>
+		<insert tableName="types">
+			<column name="NAME" value="Poison"></column>
+		</insert>
+		<insert tableName="types">
+			<column name="NAME" value="Fire"></column>
+		</insert>
+		<insert tableName="types">
+			<column name="NAME" value="Water"></column>
+		</insert>
+		<insert tableName="types">
+			<column name="NAME" value="Flying"></column>
+		</insert>
+		<insert tableName="types">
+			<column name="NAME" value="Bug"></column>
+		</insert>
+	</changeSet>
+	
+	
+	<changeSet author="heytrade" id="2">
+		<insert tableName="pokemons">
+			<column name="NAME" value="Bulbasaur"></column>
+			<column name="FAVOURITE" valueBoolean="false"></column>
+			<column name="IMAGE" valueBlobFile="../../../pokemons/images/bulbasaur.png"></column>
+			<column name="SOUND" valueBlobFile="../../../pokemons/sounds/sound.mp3"></column>
+			<column name="WEIGHT" valueNumeric="15.2"></column>
+			<column name="HEIGHT" valueNumeric="2.04"></column>
+			<column name="COMBAT_POWER" valueNumeric="25"></column>
+			<column name="HEALTH_POINTS" valueNumeric="30"></column>
+		</insert>
+		
+		<insert tableName="pokemon_types">
+			<column name="POKEMON_ID" valueComputed="(select p.POKEMON_ID from pokemons p where p.NAME = 'Bulbasaur')"></column>
+			<column name="TYPE_ID" valueComputed="(select t.TYPE_ID from types t where t.NAME = 'Grass')"></column>
+		</insert>
+		<insert tableName="pokemon_types">
+			<column name="POKEMON_ID" valueComputed="(select p.POKEMON_ID from pokemons p where p.NAME = 'Bulbasaur')"></column>
+			<column name="TYPE_ID" valueComputed="(select t.TYPE_ID from types t where t.NAME = 'Poison')"></column>
+		</insert>
+		
+		
+		<insert tableName="pokemons">
+			<column name="NAME" value="Ivysaur"></column>
+			<column name="FAVOURITE" valueBoolean="false"></column>
+			<column name="IMAGE" valueBlobFile="../../../pokemons/images/ivysaur.png"></column>
+			<column name="SOUND" valueBlobFile="../../../pokemons/sounds/sound.mp3"></column>
+			<column name="WEIGHT" valueNumeric="28.7"></column>
+			<column name="HEIGHT" valueNumeric="3.03"></column>
+			<column name="COMBAT_POWER" valueNumeric="50"></column>
+			<column name="HEALTH_POINTS" valueNumeric="40"></column>
+			<column name="EVOLUTION_FROM" valueComputed="(select p.POKEMON_ID from pokemons p where p.NAME = 'Bulbasaur')"></column>
+		</insert>
+		
+		<insert tableName="pokemon_types">
+			<column name="POKEMON_ID" valueComputed="(select p.POKEMON_ID from pokemons p where p.NAME = 'Ivysaur')"></column>
+			<column name="TYPE_ID" valueComputed="(select t.TYPE_ID from types t where t.NAME = 'Grass')"></column>
+		</insert>
+		<insert tableName="pokemon_types">
+			<column name="POKEMON_ID" valueComputed="(select p.POKEMON_ID from pokemons p where p.NAME = 'Ivysaur')"></column>
+			<column name="TYPE_ID" valueComputed="(select t.TYPE_ID from types t where t.NAME = 'Poison')"></column>
+		</insert>
+		
+		
+		<insert tableName="pokemons">
+			<column name="NAME" value="Venusaur"></column>
+			<column name="FAVOURITE" valueBoolean="false"></column>
+			<column name="IMAGE" valueBlobFile="../../../pokemons/images/venusaur.png"></column>
+			<column name="SOUND" valueBlobFile="../../../pokemons/sounds/sound.mp3"></column>
+			<column name="WEIGHT" valueNumeric="220.5"></column>
+			<column name="HEIGHT" valueNumeric="6.07"></column>
+			<column name="COMBAT_POWER" valueNumeric="150"></column>
+			<column name="HEALTH_POINTS" valueNumeric="60"></column>
+			<column name="EVOLUTION_FROM" valueComputed="(select p.POKEMON_ID from pokemons p where p.NAME = 'Ivysaur')"></column>
+		</insert>
+		
+		<insert tableName="pokemon_types">
+			<column name="POKEMON_ID" valueComputed="(select p.POKEMON_ID from pokemons p where p.NAME = 'Venusaur')"></column>
+			<column name="TYPE_ID" valueComputed="(select t.TYPE_ID from types t where t.NAME = 'Grass')"></column>
+		</insert>
+		<insert tableName="pokemon_types">
+			<column name="POKEMON_ID" valueComputed="(select p.POKEMON_ID from pokemons p where p.NAME = 'Venusaur')"></column>
+			<column name="TYPE_ID" valueComputed="(select t.TYPE_ID from types t where t.NAME = 'Poison')"></column>
+		</insert>
+	</changeSet>
+	
+	
+	<changeSet author="heytrade" id="3">
+		<insert tableName="pokemons">
+			<column name="NAME" value="Charmander"></column>
+			<column name="FAVOURITE" valueBoolean="false"></column>
+			<column name="IMAGE" valueBlobFile="../../../pokemons/images/charmander.png"></column>
+			<column name="SOUND" valueBlobFile="../../../pokemons/sounds/sound.mp3"></column>
+			<column name="WEIGHT" valueNumeric="18.7"></column>
+			<column name="HEIGHT" valueNumeric="2"></column>
+			<column name="COMBAT_POWER" valueNumeric="25"></column>
+			<column name="HEALTH_POINTS" valueNumeric="30"></column>
+		</insert>
+		
+		<insert tableName="pokemon_types">
+			<column name="POKEMON_ID" valueComputed="(select p.POKEMON_ID from pokemons p where p.NAME = 'Charmander')"></column>
+			<column name="TYPE_ID" valueComputed="(select t.TYPE_ID from types t where t.NAME = 'Fire')"></column>
+		</insert>
+		
+		<insert tableName="pokemons">
+			<column name="NAME" value="Charmeleon"></column>
+			<column name="FAVOURITE" valueBoolean="false"></column>
+			<column name="IMAGE" valueBlobFile="../../../pokemons/images/charmeleon.png"></column>
+			<column name="SOUND" valueBlobFile="../../../pokemons/sounds/sound.mp3"></column>
+			<column name="WEIGHT" valueNumeric="41.9"></column>
+			<column name="HEIGHT" valueNumeric="3.07"></column>
+			<column name="COMBAT_POWER" valueNumeric="50"></column>
+			<column name="HEALTH_POINTS" valueNumeric="40"></column>
+			<column name="EVOLUTION_FROM" valueComputed="(select p.POKEMON_ID from pokemons p where p.NAME = 'Charmander')"></column>
+		</insert>
+		
+		<insert tableName="pokemon_types">
+			<column name="POKEMON_ID" valueComputed="(select p.POKEMON_ID from pokemons p where p.NAME = 'Charmeleon')"></column>
+			<column name="TYPE_ID" valueComputed="(select t.TYPE_ID from types t where t.NAME = 'Fire')"></column>
+		</insert>
+		
+		<insert tableName="pokemons">
+			<column name="NAME" value="Charizard"></column>
+			<column name="FAVOURITE" valueBoolean="false"></column>
+			<column name="IMAGE" valueBlobFile="../../../pokemons/images/charizard.png"></column>
+			<column name="SOUND" valueBlobFile="../../../pokemons/sounds/sound.mp3"></column>
+			<column name="WEIGHT" valueNumeric="199.5"></column>
+			<column name="HEIGHT" valueNumeric="5.07"></column>
+			<column name="COMBAT_POWER" valueNumeric="150"></column>
+			<column name="HEALTH_POINTS" valueNumeric="60"></column>
+			<column name="EVOLUTION_FROM" valueComputed="(select p.POKEMON_ID from pokemons p where p.NAME = 'Charmeleon')"></column>
+		</insert>
+		
+		<insert tableName="pokemon_types">
+			<column name="POKEMON_ID" valueComputed="(select p.POKEMON_ID from pokemons p where p.NAME = 'Charizard')"></column>
+			<column name="TYPE_ID" valueComputed="(select t.TYPE_ID from types t where t.NAME = 'Fire')"></column>
+		</insert>
+		<insert tableName="pokemon_types">
+			<column name="POKEMON_ID" valueComputed="(select p.POKEMON_ID from pokemons p where p.NAME = 'Charizard')"></column>
+			<column name="TYPE_ID" valueComputed="(select t.TYPE_ID from types t where t.NAME = 'Flying')"></column>
+		</insert>
+	</changeSet>
+	
+	
+	<changeSet author="heytrade" id="4">
+		<insert tableName="pokemons">
+			<column name="NAME" value="Squirtle"></column>
+			<column name="FAVOURITE" valueBoolean="false"></column>
+			<column name="IMAGE" valueBlobFile="../../../pokemons/images/squirtle.png"></column>
+			<column name="SOUND" valueBlobFile="../../../pokemons/sounds/sound.mp3"></column>
+			<column name="WEIGHT" valueNumeric="19.8"></column>
+			<column name="HEIGHT" valueNumeric="1.08"></column>
+			<column name="COMBAT_POWER" valueNumeric="25"></column>
+			<column name="HEALTH_POINTS" valueNumeric="30"></column>
+		</insert>
+		
+		<insert tableName="pokemon_types">
+			<column name="POKEMON_ID" valueComputed="(select p.POKEMON_ID from pokemons p where p.NAME = 'Squirtle')"></column>
+			<column name="TYPE_ID" valueComputed="(select t.TYPE_ID from types t where t.NAME = 'Water')"></column>
+		</insert>
+		
+		<insert tableName="pokemons">
+			<column name="NAME" value="Wartortle"></column>
+			<column name="FAVOURITE" valueBoolean="false"></column>
+			<column name="IMAGE" valueBlobFile="../../../pokemons/images/wartortle.png"></column>
+			<column name="SOUND" valueBlobFile="../../../pokemons/sounds/sound.mp3"></column>
+			<column name="WEIGHT" valueNumeric="49.6"></column>
+			<column name="HEIGHT" valueNumeric="3.03"></column>
+			<column name="COMBAT_POWER" valueNumeric="50"></column>
+			<column name="HEALTH_POINTS" valueNumeric="40"></column>
+			<column name="EVOLUTION_FROM" valueComputed="(select p.POKEMON_ID from pokemons p where p.NAME = 'Squirtle')"></column>
+		</insert>
+		
+		<insert tableName="pokemon_types">
+			<column name="POKEMON_ID" valueComputed="(select p.POKEMON_ID from pokemons p where p.NAME = 'Wartortle')"></column>
+			<column name="TYPE_ID" valueComputed="(select t.TYPE_ID from types t where t.NAME = 'Water')"></column>
+		</insert>
+		
+		<insert tableName="pokemons">
+			<column name="NAME" value="Blastoise"></column>
+			<column name="FAVOURITE" valueBoolean="false"></column>
+			<column name="IMAGE" valueBlobFile="../../../pokemons/images/blastoise.png"></column>
+			<column name="SOUND" valueBlobFile="../../../pokemons/sounds/sound.mp3"></column>
+			<column name="WEIGHT" valueNumeric="188.5"></column>
+			<column name="HEIGHT" valueNumeric="5.03"></column>
+			<column name="COMBAT_POWER" valueNumeric="150"></column>
+			<column name="HEALTH_POINTS" valueNumeric="60"></column>
+			<column name="EVOLUTION_FROM" valueComputed="(select p.POKEMON_ID from pokemons p where p.NAME = 'Wartortle')"></column>
+		</insert>
+		
+		<insert tableName="pokemon_types">
+			<column name="POKEMON_ID" valueComputed="(select p.POKEMON_ID from pokemons p where p.NAME = 'Blastoise')"></column>
+			<column name="TYPE_ID" valueComputed="(select t.TYPE_ID from types t where t.NAME = 'Water')"></column>
+		</insert>
+	</changeSet>
+	
+</databaseChangeLog>
